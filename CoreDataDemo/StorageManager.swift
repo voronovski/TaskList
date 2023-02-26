@@ -49,4 +49,12 @@ final class StorageManager {
         context.delete(task)
         saveContext()
     }
+    
+    // MARK: - Core Data Edit support
+    func edit(task: Task) {
+        let context = persistentContainer.viewContext
+
+        context.delete(task)
+        saveContext()
+    }
 }
