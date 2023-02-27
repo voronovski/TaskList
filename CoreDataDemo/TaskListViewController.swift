@@ -9,8 +9,6 @@ import UIKit
 
 class TaskListViewController: UITableViewController {
     
-    private let context = StorageManager.shared.persistentContainer.viewContext
-    
     private let cellID = "task"
     private var taskList: [Task] = []
 
@@ -21,12 +19,6 @@ class TaskListViewController: UITableViewController {
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellID)
         
         setupNavigationBar()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        fetchData()
-        tableView.reloadData()
     }
 
     // MARK: - Navigation Bar setting up
@@ -69,7 +61,7 @@ class TaskListViewController: UITableViewController {
         let fetchRequest = Task.fetchRequest()
         
         do {
-            taskList = try context.fetch(fetchRequest)
+            taskList = try StorageManager.shared.context.fetch(fetchRequest)
         } catch {
             print("Failed to fetch data", error)
         }
@@ -143,7 +135,7 @@ extension TaskListViewController {
     }
     
     private func save(_ taskName: String) {
-        let task = Task(context: context)
+        let task = Task(context: StorageManager.shared.context)
         task.name = taskName
         taskList.append(task)
         
@@ -151,7 +143,7 @@ extension TaskListViewController {
         tableView.insertRows(at: [cellIndex], with: .automatic)
         
         do {
-            try context.save()
+            try StorageManager.shared.context.save()
         } catch {
             print(error)
         }
@@ -162,7 +154,7 @@ extension TaskListViewController {
         task.name = changes
 
         do {
-            try context.save()
+            try StorageManager.shared.context.save()
         } catch {
             print(error)
         }

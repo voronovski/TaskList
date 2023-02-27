@@ -14,8 +14,9 @@ final class StorageManager {
     
     private init () {}
     
+    
     // MARK: - Core Data stack
-    lazy var persistentContainer: NSPersistentContainer = {
+    let persistentContainer: NSPersistentContainer = {
 
         let container = NSPersistentContainer(name: "CoreDataDemo")
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
@@ -26,11 +27,11 @@ final class StorageManager {
         })
         return container
     }()
-
+    
+    lazy var context = persistentContainer.viewContext
+    
     // MARK: - Core Data Saving support
     func saveContext () {
-        let context = persistentContainer.viewContext
-
         if context.hasChanges {
             do {
                 try context.save()
@@ -44,16 +45,6 @@ final class StorageManager {
     
     // MARK: - Core Data Delete support
     func delete(task: Task) {
-        let context = persistentContainer.viewContext
-
-        context.delete(task)
-        saveContext()
-    }
-    
-    // MARK: - Core Data Edit support
-    func edit(task: Task) {
-        let context = persistentContainer.viewContext
-
         context.delete(task)
         saveContext()
     }
