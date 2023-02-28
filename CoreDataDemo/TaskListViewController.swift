@@ -54,7 +54,7 @@ class TaskListViewController: UITableViewController {
     
     // MARK: - Private methods
     @objc private func addNewTask() {
-        showAlert()
+        showAlert(with: "New Task", and: "What do you want to do?")
     }
     
     private func fetchData() {
@@ -94,44 +94,40 @@ extension TaskListViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let text = taskList[indexPath.row].name
-        showAlert(text ?? "", indexPath.row)
+        showAlert(
+            with: "Edit task",
+            and: "Please, change the task",
+            and: text ?? "",
+            and: indexPath.row
+        )
     }
 }
 // MARK: - Alert Controller
 extension TaskListViewController {
-    private func showAlert(_ text: String = "", _ index: Int = 0) {
-        if text != "" {
-            let alert = UIAlertController(title: "Edit task", message: "Please, change the task", preferredStyle: .alert)
-            
-            let saveAction = UIAlertAction(title: "Save", style: .default) { _ in
+    private func showAlert(
+        with title: String,
+        and message: String,
+        and text: String = "",
+        and index: Int = 0
+    ) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let saveAction = UIAlertAction(title: "Save", style: .default) { _ in
+            if text != "" {
                 guard let changes = alert.textFields?.first?.text, !changes.isEmpty else { return }
                 self.edit(changes, index)
-            }
-            let cancelAction = UIAlertAction(title: "Cancel", style: .destructive)
-            alert.addAction(saveAction)
-            alert.addAction(cancelAction)
-            alert.addTextField { textField in
-                textField.text = text
-            }
-            
-            present(alert, animated: true)
-        } else {
-            let alert = UIAlertController(title: "New Task", message: "What do you want to do?", preferredStyle: .alert)
-            
-            let saveAction = UIAlertAction(title: "Save", style: .default) { _ in
+            } else {
                 guard let task = alert.textFields?.first?.text, !task.isEmpty else { return }
                 self.save(task)
             }
-            let cancelAction = UIAlertAction(title: "Cancel", style: .destructive)
-            alert.addAction(saveAction)
-            alert.addAction(cancelAction)
-            alert.addTextField { textField in
-                textField.placeholder = "New Task"
-            }
-            
-            present(alert, animated: true)
+        }
+        let cancelAction = UIAlertAction(title: "Cancel", style: .destructive)
+        alert.addAction(saveAction)
+        alert.addAction(cancelAction)
+        alert.addTextField { textField in
+            textField.text = text
         }
         
+        present(alert, animated: true)
     }
     
     private func save(_ taskName: String) {
