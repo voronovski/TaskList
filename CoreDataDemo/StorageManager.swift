@@ -41,9 +41,32 @@ final class StorageManager {
             }
         }
     }
-    
+
     // MARK: - CRUD
-    func delete(task: Task) {
+    func create(_ taskName: String, completion: (Task) -> Void) {
+        let task = Task(context: context)
+        task.name = taskName
+        completion(task)
+        saveContext()
+    }
+    
+    func fetchData(completion: (Result<[Task], Error>) -> Void) {
+        let fetchRequest = Task.fetchRequest()
+        
+        do {
+            let tasks = try context.fetch(fetchRequest)
+            completion(.success(tasks))
+        } catch let error {
+            completion(.failure(error))
+        }
+    }
+    
+    func update(_ task: Task, _ changes: String) {
+        task.name = changes
+        saveContext()
+    }
+    
+    func delete(_ task: Task) {
         context.delete(task)
         saveContext()
     }
