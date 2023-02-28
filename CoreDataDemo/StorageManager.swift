@@ -10,12 +10,9 @@ import CoreData
 final class StorageManager {
     
     static let shared = StorageManager()
-    
-    private init () {}
-    
-    
+ 
     // MARK: - Core Data stack
-    let persistentContainer: NSPersistentContainer = {
+    private let persistentContainer: NSPersistentContainer = {
 
         let container = NSPersistentContainer(name: "CoreDataDemo")
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
@@ -27,7 +24,11 @@ final class StorageManager {
         return container
     }()
     
-    lazy var context = persistentContainer.viewContext
+    private let context: NSManagedObjectContext
+    
+    private init () {
+        context = persistentContainer.viewContext
+    }
     
     // MARK: - Core Data Saving support
     func saveContext () {
@@ -35,14 +36,13 @@ final class StorageManager {
             do {
                 try context.save()
             } catch {
-    
                 let nserror = error as NSError
                 fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
             }
         }
     }
     
-    // MARK: - Core Data Delete support
+    // MARK: - CRUD
     func delete(task: Task) {
         context.delete(task)
         saveContext()
