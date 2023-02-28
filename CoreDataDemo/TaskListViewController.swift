@@ -115,10 +115,10 @@ extension TaskListViewController {
         let saveAction = UIAlertAction(title: "Save", style: .default) { _ in
             if text != "" {
                 guard let changes = alert.textFields?.first?.text, !changes.isEmpty else { return }
-                self.edit(changes, index)
+                self.update(changes, index)
             } else {
                 guard let task = alert.textFields?.first?.text, !task.isEmpty else { return }
-                self.save(task)
+                self.create(task)
             }
         }
         let cancelAction = UIAlertAction(title: "Cancel", style: .destructive)
@@ -132,7 +132,7 @@ extension TaskListViewController {
         present(alert, animated: true)
     }
     
-    private func save(_ taskName: String) {
+    private func create(_ taskName: String) {
         let task = Task(context: StorageManager.shared.context)
         task.name = taskName
         taskList.append(task)
@@ -147,7 +147,7 @@ extension TaskListViewController {
         }
     }
     
-    private func edit(_ changes: String, _ index: Int) {
+    private func update(_ changes: String, _ index: Int) {
         let task = taskList[index]
         task.name = changes
 
@@ -157,6 +157,7 @@ extension TaskListViewController {
             print(error)
         }
         
-        tableView.reloadData()
+        let cellIndex = IndexPath(row: index, section: 0)
+        tableView.reloadRows(at: [cellIndex], with: .automatic)
     }
 }
