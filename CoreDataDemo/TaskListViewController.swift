@@ -100,6 +100,7 @@ extension TaskListViewController {
             and: text ?? "",
             and: indexPath.row
         )
+        tableView.deselectRow(at: indexPath, animated: true)
     }
 }
 // MARK: - Alert Controller
@@ -124,6 +125,7 @@ extension TaskListViewController {
         alert.addAction(saveAction)
         alert.addAction(cancelAction)
         alert.addTextField { textField in
+            textField.placeholder = "New Task"
             textField.text = text
         }
         
