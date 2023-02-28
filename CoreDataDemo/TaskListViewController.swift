@@ -2,7 +2,7 @@
 //  ViewController.swift
 //  CoreDataDemo
 //
-//  Created by brubru on 29.09.2022.
+//  Created by Aleksei Voronovskii on 2/28/2023.
 //
 
 import UIKit
